@@ -44,7 +44,7 @@ calculated = calculate(calculation_kind, scraped_data_filename)
 calculated.to_csv(calculated_filename)
 # Also create tabular output
 calculated_long = transform_wide_to_long(calculated, var_to_track, calculation_kind)
-calculated_long.to_csv(calculated_tabular_filename)
+calculated_long.to_csv(calculated_tabular_filename, index=False)
 
 if output_reverse_csv:
     calculated_reversed = calculated.sort_index(axis=0, ascending=False)
