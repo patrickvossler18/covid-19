@@ -16,6 +16,36 @@ ALL_US_REGIONS = {'Pacific': ['Washington', 'Oregon', 'California'],
                   'Mid-Atlantic': ['Virginia', 'West Virginia', 'Maryland', 'Delaware', 'DC'], 
         }
 
+
+def transform_wide_to_long(data_frame,
+                           var_to_track,
+                           calculation_kind,
+                           region=ALL_STATES):
+    """Scrape data for a given region and store in local csv file
+
+    Parameters
+    ----------
+    data_frame : wide pd Data frame
+    var_to_track : e.g. "Deaths" / "Confirmed" / "Recovered". Used for column name when melting the data frame
+    calculation_kind : doubling_time / fold_change Used for column name when melting the data frame
+    region : list of the columns to melt. Default is the list of states.
+
+
+
+    Returns
+    -------
+    long_data : pd Data frame in long form with an observation for each date and state
+    """
+
+    # Rename first column to be called Date
+    data_frame.rename({'Unnamed: 0': 'Date'}, axis=1, inplace=True)
+
+    # Transform from wide to long
+    long_data = pd.melt(data_frame, id_vars='Date', value_vars=region,
+                        value_name=f'{calculation_kind}-{var_to_track}')
+    return long_data
+
+
 def scrape_regional_data(region="new jersey", 
                          region_type="state",
                          var_to_track="Deaths",

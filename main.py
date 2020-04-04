@@ -11,7 +11,7 @@ It is run using the run.sh bash script which first pulls down new data.
 
 import os, sys
 import pandas as pd
-from scrape import scrape_all_regions
+from scrape import scrape_all_regions, transform_wide_to_long
 from calculations import calculate, compute_top_n, c_str
 from displays import generate_plot, generate_html
 
@@ -29,6 +29,7 @@ calculation_kind = 'doubling_time' # doubling_time / fold_change
 show_n_days = 25
 scraped_data_filename = f'data/scraped_data-{var_to_track}.csv'
 calculated_filename = f'data/{calculation_kind}-{var_to_track}.csv'
+calculated_tabular_filename = f'data/{calculation_kind}-{var_to_track}-tabular.csv'
 runaway_zone = calculation_kind == 'doubling_time'
 log = calculation_kind == 'fold_change'
 output_reverse_csv = True
@@ -41,11 +42,19 @@ data.to_csv(scraped_data_filename)
 ## Step 2: run calculation
 calculated = calculate(calculation_kind, scraped_data_filename)
 calculated.to_csv(calculated_filename)
+# Also create tabular output
+calculated_long = transform_wide_to_long(calculated, var_to_track, calculation_kind)
+calculated_long.to_csv(calculated_tabular_filename)
 
 if output_reverse_csv:
     calculated_reversed = calculated.sort_index(axis=0, ascending=False)
     calculated_reversed_filename = f'data/{calculation_kind}-{var_to_track}-reversed.csv'
+    calculated_reversed_tabular_filename = f'data/{calculation_kind}-{var_to_track}-reversed-tabular.csv'
     calculated_reversed.to_csv(calculated_reversed_filename)
+    # Also create tabular output
+    calculated_reversed_long = transform_wide_to_long(calculated_reversed, var_to_track, calculation_kind)
+    calculated_reversed_long.to_csv(calculated_reversed_tabular_filename)
+
 
 
 ## Step 3: generate and save plots
