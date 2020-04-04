@@ -21,11 +21,11 @@ def transform_wide_to_long(data_frame,
                            var_to_track,
                            calculation_kind,
                            region=ALL_STATES):
-    """Scrape data for a given region and store in local csv file
+    """Transform a calculated data frame from wide to long
 
     Parameters
     ----------
-    data_frame : wide pd Data frame
+    data_frame : wide calculated pd Data frame
     var_to_track : e.g. "Deaths" / "Confirmed" / "Recovered". Used for column name when melting the data frame
     calculation_kind : doubling_time / fold_change Used for column name when melting the data frame
     region : list of the columns to melt. Default is the list of states.
