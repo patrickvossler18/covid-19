@@ -11,7 +11,7 @@ It is run using the run.sh bash script which first pulls down new data.
 
 import os, sys
 import pandas as pd
-from scrape import scrape_all_regions, transform_wide_to_long
+from scrape import scrape_all_regions, ALL_US_REGIONS, transform_wide_to_long
 from calculations import calculate, compute_top_n, c_str
 from displays import generate_plot, generate_html
 
