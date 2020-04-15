@@ -123,6 +123,15 @@ def scrape_regional_data(region="new jersey",
         dates[day] = np.datetime64(date)
         totals[day] = total
 
+    # correct for any errors where day n+1 has less than day n
+    dif = np.append(0, np.diff(totals))
+    while np.any(dif < 0):
+        i_issue = np.argwhere(dif < 0)[:,0]
+        for i in i_issue:
+            totals[i] = totals[i-1]
+        dif = np.append(0, np.diff(totals))
+    assert np.all(np.diff(totals) >= 0), 'Non monotonic cumulative values'
+
     result = pd.Series(totals, index=dates)
     return result
 
